@@ -58,9 +58,13 @@ class _HomeAdmViewState extends State<HomeAdmView> {
             context.push(Routes.addCar);
           }),
           const SizedBox(width: 10),
-          actionButton('Ver Autos', Icons.car_rental, () {}),
+          actionButton('Ver Autos', Icons.car_rental, () {
+            context.push(Routes.allCars);
+          }),
           const SizedBox(width: 10),
-          actionButton('Ver Rentas', Icons.car_repair, () {}),
+          actionButton('Ver Rentas', Icons.car_repair, () {
+            context.push(Routes.allRents);
+          }),
         ],
       ),
     );

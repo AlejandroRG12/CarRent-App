@@ -56,20 +56,6 @@ class CarsController {
     }
   }
 
-  /* 
-    MODELO DEL VEICULO EN EL BACKEND
-    self.id = id
-        self.nombre = nombre
-        self.modelo = modelo
-        self.marca = marca
-        self.imgs = imgs if imgs is not None else []  # Asegúrate de que imgs sea una lista
-        self.tamanioTanque = tamanioTanque
-        self.tipoDeTransmision = tipoDeTransmision
-        self.capacidad = capacidad
-        self.precioPorRenta = precioPorRenta
-        self.descripcion = descripcion
-   */
-
   Future<Map<String, dynamic>> addVehiculo(
     String nombre,
     String modelo,
@@ -100,6 +86,78 @@ class CarsController {
       if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
         if (responseData['code'] == 201) {
+          // La solicitud fue exitosa y el usuario fue autenticado
+          return responseData;
+        } else {
+          // La solicitud fue exitosa pero hubo un error en la autenticación
+          return {'error': responseData['message']};
+        }
+      } else {
+        // La solicitud falló
+        return {'error': 'Error en la solicitud: ${response.statusCode}'};
+      }
+    } catch (e) {
+      // Hubo un error en la solicitud
+      return {'error': 'Error haciendo la solicitud: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> updateVehiculo(
+    String id,
+    String nombre,
+    String modelo,
+    String marca,
+    List<String> imgs,
+    String tamanioTanque,
+    String tipoDeTransmision,
+    String capacidad,
+    String precioPorRenta,
+    String descripcion,
+  ) async {
+    final url = Uri.parse('http://127.0.0.1:8888/vehiculos/$id');
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({
+      "nombre": nombre,
+      "modelo": modelo,
+      "marca": marca,
+      "imgs": imgs,
+      "tamanioTanque": tamanioTanque,
+      "tipoDeTransmision": tipoDeTransmision,
+      "capacidad": capacidad,
+      "precioPorRenta": precioPorRenta,
+      "descripcion": descripcion
+    });
+
+    try {
+      final response = await http.put(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        if (responseData['code'] == 200) {
+          // La solicitud fue exitosa y el usuario fue autenticado
+          return responseData;
+        } else {
+          // La solicitud fue exitosa pero hubo un error en la autenticación
+          return {'error': responseData['message']};
+        }
+      } else {
+        // La solicitud falló
+        return {'error': 'Error en la solicitud: ${response.statusCode}'};
+      }
+    } catch (e) {
+      // Hubo un error en la solicitud
+      return {'error': 'Error haciendo la solicitud: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteVehiculo(String id) async {
+    final url = Uri.parse('http://127.0.0.1:8888/vehiculos/$id');
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await http.delete(url, headers: headers);
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        if (responseData['code'] == 200) {
           // La solicitud fue exitosa y el usuario fue autenticado
           return responseData;
         } else {
